@@ -21,16 +21,16 @@ VALUES
 
 INSERT INTO "word" ("id", "language_id", "original", "translation", "next")
 VALUES
-  (1, 1, '圖書館', 'library', 2),
-  (2, 1, '電腦', 'computer', 3),
-  (3, 1, '抱歉', 'sorry', 4),
-  (4, 1, '謝謝', 'thank you', 5),
-  (5, 1, '食物', 'food', 6),
-  (6, 1, '水', 'water', 7),
-  (7, 1, '桌子', 'table', 8),
-  (8, 1, '動物', 'animal', 9),
-  (9, 1, '廁所', 'restroom', 10),
-  (10, 1, '車子', 'car', null);
+  (1, 1, CONCAT(E'\u5716', E'\u66f8', E'\u9928', E'\u000d', E'\u000a'), 'library', 2), -- '圖書館'
+  (2, 1, CONCAT(E'\u96fb', E'\u8166', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'computer', 3), -- '電腦'
+  (3, 1, CONCAT(E'\u62b1', E'\u6b49', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'sorry', 4), --'抱歉'
+  (4, 1, CONCAT(E'\u8b1d', E'\u8b1d', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'thank you', 5), --'謝謝'
+  (5, 1, CONCAT(E'\u98df', E'\u7269', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'food', 6), --'食物'
+  (6, 1, CONCAT(E'\u6c34', E'\u000d', E'\u000a', E'\u000d', E'\u000aa'), 'water', 7), --'水'
+  (7, 1, CONCAT(E'\u684c', E'\u5b50', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'table', 8), --'桌子'
+  (8, 1, CONCAT(E'\u52d5', E'\u7269', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'animal', 9), --'動物'
+  (9, 1, CONCAT(E'\u5ec1', E'\u6240', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'restroom', 10), --'廁所'
+  (10, 1, CONCAT(E'\u8eca', E'\u5b50', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'car', null); --'車子'
 
 UPDATE "language" SET head = 1 WHERE id = 1;
 
