@@ -20,7 +20,7 @@ const LanguageService = {
   poplulateQuestionsList(db, language_id, ll) {
     let words = this.getLanguageWords(db, language_id);
     words.forEach(word => {
-      let word = {...word, M: 1}
+      word = {...word, M: 1}
       ll.insertLast(word)
     })
     return ll;
