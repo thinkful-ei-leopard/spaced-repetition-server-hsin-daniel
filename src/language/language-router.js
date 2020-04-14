@@ -1,11 +1,9 @@
 const express = require('express')
-const {LanguageService, LinkedList} = require('./language-service')
+const LanguageService = require('./language-service')
 const { requireAuth } = require('../middleware/jwt-auth')
 
 const languageRouter = express.Router()
 const jsonBodyParser = express.json()
-
-let questionsList = new LinkedList();
 
 languageRouter
   .use(requireAuth)
@@ -50,14 +48,12 @@ languageRouter
 languageRouter
   .get('/head', async (req, res, next) => {
     try {
-      const word = await LanguageService.getLanguageHead(
-        req.app.get('db'), 1
-      )
+      const word = await LanguageService.getLanguageHead(req.app.get('db'))
       res.json({
-        "nextWord": `${word[0].original}`,
-        "totalScore": word[0].total_score,
-        "wordCorrectCount": word[0].correct_count,
-        "wordIncorrectCount": word[0].incorrect_count
+        "nextWord": `${word.original}`,
+        "totalScore": word.total_score,
+        "wordCorrectCount": word.correct_count,
+        "wordIncorrectCount": word.incorrect_count
         })
       next()
     } catch (error) {
@@ -68,19 +64,23 @@ languageRouter
 languageRouter
   .post('/guess',jsonBodyParser, async (req, res, next) => {
     let { guess } = req.body;
-    console.log(words)
     if (!guess) {
-      res
+      return res
         .status(400)
         .send({
           error: `Missing 'guess' in request body`,
         })
     }
-    else if (guess !== questionsList.head.value.translation) {
+    const word = await LanguageService.getLanguageHead(req.app.get('db'))
+    console.log(word)
+    const translation = word.translation
+    if (guess !== translation) {  //guess is not equal to language head value) 
+      LanguageService.updateMemoryOnIncorrectAnswer(req.app.get('db'), word.id)
       res
         .status(200)
-        .json(questionsList.head.value)
+        .json(word)
     }
+    LanguageService.updateMemoryOnCorrectAnswer(req.app.get('db'), word.id)
   })
 
 module.exports = languageRouter
