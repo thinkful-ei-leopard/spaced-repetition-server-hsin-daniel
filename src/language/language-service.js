@@ -1,3 +1,7 @@
+const LinkedList = require('../modules/LinkedList')
+
+let questionsList = new LinkedList();
+
 const LanguageService = {
   getUsersLanguage(db, user_id) {
     return db
@@ -11,6 +15,22 @@ const LanguageService = {
       )
       .where('language.user_id', user_id)
       .first()
+  },
+
+  poplulateQuestionsList(db, language_id, ll) {
+    let words = this.getLanguageWords(db, language_id);
+    words.forEach(word => {
+      let word = {...word, M: 1}
+      ll.insertLast(word)
+    })
+    return ll;
+  },
+
+  processIncorrectAnswer(ll) {
+    ll.head.value.M = ll.head.value.M * 2; //double M
+    let currNode = ll.head; //store head as currNode
+    ll.head = currNode.next;  //set head of ll to be the next question in linked list
+    //need to move currNode back M spaces...
   },
 
   getLanguageWords(db, language_id) {
@@ -44,4 +64,7 @@ const LanguageService = {
   }
 }
 
-module.exports = LanguageService
+module.exports = {
+  LanguageService,
+  LinkedList
+}
