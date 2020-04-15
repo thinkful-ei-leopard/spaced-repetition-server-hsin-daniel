@@ -44,8 +44,8 @@ const LanguageService = {
       })
   },
 
-  getNextWord(db, word) {
-    return db
+  getNextWord: async (db, word) => {
+    return await db
       .from('word')
       .select('*')
       .where('word.id', word.next)

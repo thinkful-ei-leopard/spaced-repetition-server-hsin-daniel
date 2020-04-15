@@ -76,33 +76,35 @@ languageRouter
     if (guess !== translation) {  //guess is not equal to language head value) 
       LanguageService.updateMemoryOnIncorrectAnswer(req.app.get('db'), word) //change memory_value
       LanguageService.updateNewHead(req.app.get('db'), word) //change head to be next
-      let wordToUpdate = findMSpacesBack(req.app.get('db'), word, word.memory_value) //find word we want to move before
+      let wordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value) //find word we want to move before
       LanguageService.updateNextValue(req.app.get('db'), word, wordToUpdate) //update this word's next to be found word's id
-      let otherWordToUpdate = findMSpacesBack(req.app.get('db'), word, word.memory_value - 1) //find the word we want to move after
+      let otherWordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value - 1) //find the word we want to move after
       LanguageService.updateNextValue(req.app.get('db'), otherWordToUpdate, word) //update that word's next to be this word's id
       res
         .status(200)
         .json(word)
     }
+    else if (guess === translation) {
     LanguageService.updateMemoryOnCorrectAnswer(req.app.get('db'), word)
     LanguageService.updateNewHead(req.app.get('db'), word)
-    let wordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value)
+    let wordToUpdate = findMSpacesBack(req.app.get('db'), word, word.memory_value)
     LanguageService.updateNextValue(req.app.get('db'), word, wordToUpdate)
-    let otherWordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value - 1)
+    let otherWordToUpdate = findMSpacesBack(req.app.get('db'), word, word.memory_value - 1)
     LanguageService.updateNextValue(req.app.get('db'), otherWordToUpdate, word)
     res 
       .status(200)
       .json(word)
+    }
   })
 
-  function findMSpacesBack(db, word, memory_value) {
-    if(memory_value < 0) {
+  async function findMSpacesBack(db, word, memory_value) {
+    if(memory_value < 0 || word.next === null) {
       return word
     }
     let num = memory_value - 1;
-    let nextWord = LanguageService.getNextWord(db, word)
+    let nextWord = await LanguageService.getNextWord(db, word)
     console.log(nextWord)
-    findMSpacesBack(db, nextWord, num)
+    return await findMSpacesBack(db, nextWord, num)
   }  
 
 module.exports = languageRouter
