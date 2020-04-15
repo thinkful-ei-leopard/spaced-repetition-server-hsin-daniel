@@ -20,7 +20,7 @@ const LanguageService = {
       .from('word')
       .where('word.id', word.id)
       .update({
-        memory_value: ('word.memory_value' * 2),  //multiply memory value by 2
+        memory_value: (2),  //multiply memory value by 2
         correct_count: (word.memory_value + 1) //update correct count
       }) 
   },
@@ -62,14 +62,14 @@ const LanguageService = {
   },
 
   updateMemoryOnIncorrectAnswer(db, word) {
+    console.log('updating')
     return db
       .from('word')
       .where('word.id', word.id)
       .update({
         memory_value: 1,  //set memory value to 1
-        incorrect_count: (word.memory_value + 1) //update incorrect count
+        incorrect_count: db.raw('incorrect_count + 1') //update incorrect count
       }) 
-    //need to move currNode back M spaces...
   },
 
   getLanguageWords(db, language_id) {
