@@ -87,13 +87,13 @@ languageRouter
         .json(word)
     }
     else if (guess === translation) {
-    LanguageService.updateMemoryOnCorrectAnswer(req.app.get('db'), word)
-    LanguageService.updateNewHead(req.app.get('db'), word)
-    let wordToUpdate = findMSpacesBack(req.app.get('db'), word, word.memory_value)
-    LanguageService.updateNextValue(req.app.get('db'), word, wordToUpdate)
-    let otherWordToUpdate = findMSpacesBack(req.app.get('db'), word, word.memory_value - 1)
-    LanguageService.updateNextValue(req.app.get('db'), otherWordToUpdate, word)
-    console.log(res.json(word))
+    await LanguageService.updateMemoryOnCorrectAnswer(req.app.get('db'), word)
+    word = await LanguageService.getLanguageHead(req.app.get('db'))
+    await LanguageService.updateNewHead(req.app.get('db'), word)
+    let wordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value)
+    await LanguageService.updateNextValue(req.app.get('db'), word, wordToUpdate)
+    let otherWordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value - 1)
+    await LanguageService.updateNextValue(req.app.get('db'), otherWordToUpdate, word)
     res 
       .status(200)
       .json(word)

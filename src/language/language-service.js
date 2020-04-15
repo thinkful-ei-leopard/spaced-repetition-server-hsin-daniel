@@ -20,8 +20,8 @@ const LanguageService = {
       .from('word')
       .where('word.id', word.id)
       .update({
-        memory_value: (2),  //multiply memory value by 2
-        correct_count: (word.memory_value + 1) //update correct count
+        memory_value: db.raw('memory_value * 2'),  //multiply memory value by 2
+        correct_count: db.raw('correct_count + 1') //update correct count
       }) 
   },
 
@@ -29,7 +29,7 @@ const LanguageService = {
     return db
       .from('language')
       .update({
-        total_score: ('language.total_score' + 1) //increment total score
+        total_score: db.raw('total_score + 1') //increment total score
       })
   },
 
