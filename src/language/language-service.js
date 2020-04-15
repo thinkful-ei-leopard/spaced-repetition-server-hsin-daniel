@@ -15,7 +15,7 @@ const LanguageService = {
   },
 
   updateMemoryOnCorrectAnswer(db, word) {
-    this.incrementTotalScore(db)
+    this.incrementTotalScore(db, word)
     return db
       .from('word')
       .where('word.id', word.id)
@@ -25,11 +25,13 @@ const LanguageService = {
       }) 
   },
 
-  incrementTotalScore(db) {
+  incrementTotalScore(db, word) {
+    console.log(word.language_id)
     return db
       .from('language')
+      .where('language.id', word.language_id)
       .update({
-        total_score: db.raw('total_score + 1') //increment total score
+        total_score: 2  //db.raw('total_score + 1') //increment total score
       })
   },
 

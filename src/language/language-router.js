@@ -76,7 +76,7 @@ languageRouter
     if (guess !== translation) {  //guess is not equal to language head value) 
       await LanguageService.updateMemoryOnIncorrectAnswer(req.app.get('db'), word) //change memory_value
       word = await LanguageService.getLanguageHead(req.app.get('db'))
-      console.log(word)
+      nextWord = await LanguageService.getNextWord(req.app.get('db'), word)
       await LanguageService.updateNewHead(req.app.get('db'), word) //change head to be next
       let wordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value) //find word we want to move before
       await LanguageService.updateNextValue(req.app.get('db'), word, wordToUpdate) //update this word's next to be found word's id
@@ -84,11 +84,20 @@ languageRouter
       await LanguageService.updateNextValue(req.app.get('db'), otherWordToUpdate, word) //update that word's next to be this word's id
       res
         .status(200)
-        .json(word)
+        .json({
+          answer: word.translation,
+          isCorrect: false, 
+          nextWord: nextWord.original,
+          totalScore: word.total_score,
+          wordCorrectCount: word.correct_count,
+          wordIncorrectCount: word.incorrect_count
+        })
     }
     else if (guess === translation) {
     await LanguageService.updateMemoryOnCorrectAnswer(req.app.get('db'), word)
     word = await LanguageService.getLanguageHead(req.app.get('db'))
+    console.log(word)
+    nextWord = await LanguageService.getNextWord(req.app.get('db'), word)
     await LanguageService.updateNewHead(req.app.get('db'), word)
     let wordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value)
     await LanguageService.updateNextValue(req.app.get('db'), word, wordToUpdate)
@@ -96,7 +105,14 @@ languageRouter
     await LanguageService.updateNextValue(req.app.get('db'), otherWordToUpdate, word)
     res 
       .status(200)
-      .json(word)
+      .json({
+        answer: word.translation,
+        isCorrect: true, 
+        nextWord: nextWord.original,
+        totalScore: word.total_score,
+        wordCorrectCount: word.correct_count,
+        wordIncorrectCount: word.incorrect_count
+      })
     }
   })
 
