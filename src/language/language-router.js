@@ -95,8 +95,8 @@ languageRouter
     }
     else if (guess === translation) {
     await LanguageService.updateMemoryOnCorrectAnswer(req.app.get('db'), word)
+    await LanguageService.incrementTotalScore(req.app.get('db'), word)
     word = await LanguageService.getLanguageHead(req.app.get('db'))
-    console.log(word)
     nextWord = await LanguageService.getNextWord(req.app.get('db'), word)
     await LanguageService.updateNewHead(req.app.get('db'), word)
     let wordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value)
