@@ -14,19 +14,15 @@ const LanguageService = {
       .first()
   },
 
- //assign correct starting head values and memory values to language and words
-
-  updateMemoryOnCorrectAnswer(db, wordId) {
-    this.incrementTotalScore()
+  updateMemoryOnCorrectAnswer(db, word) {
+    this.incrementTotalScore(db)
     return db
       .from('word')
-      .where('word.id', wordId)
+      .where('word.id', word.id)
       .update({
         memory_value: ('word.memory_value' * 2),  //multiply memory value by 2
-        correct_count: ('word.correct_count' + 1) //update correct count
+        correct_count: (word.memory_value + 1) //update correct count
       }) 
-      //set new head
-      //move this word back M spaces
   },
 
   incrementTotalScore(db) {
@@ -39,28 +35,40 @@ const LanguageService = {
 
   //findNext
 
-  moveBackMSpaces(db, next, num) {
-    for (let i = 0; i <num; i++) {
-      return db //find next word
-        .from('word')
-        .where('word.id', next)
-    }
-      //find the word back M spaces
-      //move word back M spaces
-      //set this word's next to be the new language.head
-      //set next to be the id of the word that is m spaces back in line
-      //set the next of the word m - 1 spaces back in line to be this words id
-  },
-
-  updateMemoryOnIncorrectAnswer(db, wordId) {
+  updateNextValue(db, word, nextWord) {
     return db
       .from('word')
-      .where('word.id', wordId)
+      .where('word.id', word.id)
+      .update({
+        next: nextWord.id
+      })
+  },
+
+  getNextWord(db, word) {
+    return db
+      .from('word')
+      .select('*')
+      .where('word.id', word.next)
+      .first()  
+  },
+
+  updateNewHead(db, word) {
+    return db 
+      .from('language')
+      .where('language.id', word.language_id)
+      .update({
+        head: word.next //set head of language to be next in line
+      })
+  },
+
+  updateMemoryOnIncorrectAnswer(db, word) {
+    return db
+      .from('word')
+      .where('word.id', word.id)
       .update({
         memory_value: 1,  //set memory value to 1
-        incorrect_count: ('word.incorrect_count' + 1) //update incorrect count
+        incorrect_count: (word.memory_value + 1) //update incorrect count
       }) 
-     //set head of ll to be the next question in linked list
     //need to move currNode back M spaces...
   },
 
@@ -85,13 +93,7 @@ const LanguageService = {
       .from('language')
       .innerJoin('word', 'word.id', '=', 'language.head')
       .first()
-      .select(
-        'original',
-        'total_score',
-        'correct_count',
-        'incorrect_count',
-        'translation'
-        )
+      .select('*')
   }
 }
 
