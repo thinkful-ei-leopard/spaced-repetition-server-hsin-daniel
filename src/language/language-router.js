@@ -76,7 +76,6 @@ languageRouter
       req.user.id)
     let word = await LanguageService.getLanguageHead(req.app.get('db'), language)
     const translation = word.translation
-    console.log(word)
     if (guess !== translation) {  //guess is not equal to language head value) 
       await LanguageService.updateMemoryOnIncorrectAnswer(req.app.get('db'), word) //change memory_value
       word = await LanguageService.getLanguageHead(req.app.get('db'), language)
@@ -105,7 +104,6 @@ languageRouter
     nextWord = await LanguageService.getNextWord(req.app.get('db'), word)
     await LanguageService.updateNewHead(req.app.get('db'), word)
     let wordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value)
-    // console.log(wordToUpdate)
     await LanguageService.updateNextValue(req.app.get('db'), word, wordToUpdate)
     let otherWordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value - 1)
     await LanguageService.updateNextValue(req.app.get('db'), otherWordToUpdate, word)

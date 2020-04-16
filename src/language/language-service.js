@@ -15,7 +15,6 @@ const LanguageService = {
   },
 
   updateMemoryOnCorrectAnswer(db, word) {
-    console.log('from memory update', word)
     return db
       .from('word')
       .where('word.id', word.id)
@@ -95,7 +94,6 @@ const LanguageService = {
   },
 
   getLanguageHead(db, language) {
-    console.log(language.head)
     return db
       .from('language')
       .where('language.id', language.id)  //specify language id
