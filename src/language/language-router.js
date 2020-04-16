@@ -13,7 +13,6 @@ languageRouter
         req.app.get('db'),
         req.user.id,
       )
-
       if (!language)
         return res.status(404).json({
           error: `You don't have any languages`,
@@ -48,7 +47,9 @@ languageRouter
 languageRouter
   .get('/head', async (req, res, next) => {
     try {
-      const word = await LanguageService.getLanguageHead(req.app.get('db'))
+      const language = await LanguageService.getUsersLanguage(req.app.get('db'),
+      req.user.id)
+      const word = await LanguageService.getLanguageHead(req.app.get('db'), language)
       res.json({
         "nextWord": `${word.original}`,
         "totalScore": word.total_score,
@@ -71,11 +72,13 @@ languageRouter
           error: `Missing 'guess' in request body`,
         })
     }
-    let word = await LanguageService.getLanguageHead(req.app.get('db'))
+    const language = await LanguageService.getUsersLanguage(req.app.get('db'),
+      req.user.id)
+    let word = await LanguageService.getLanguageHead(req.app.get('db'), language)
     const translation = word.translation
     if (guess !== translation) {  //guess is not equal to language head value) 
       await LanguageService.updateMemoryOnIncorrectAnswer(req.app.get('db'), word) //change memory_value
-      word = await LanguageService.getLanguageHead(req.app.get('db'))
+      word = await LanguageService.getLanguageHead(req.app.get('db'), language)
       nextWord = await LanguageService.getNextWord(req.app.get('db'), word)
       await LanguageService.updateNewHead(req.app.get('db'), word) //change head to be next
       let wordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value) //find word we want to move before
@@ -94,9 +97,11 @@ languageRouter
         })
     }
     else if (guess === translation) {
+      try {
     await LanguageService.updateMemoryOnCorrectAnswer(req.app.get('db'), word)
     await LanguageService.incrementTotalScore(req.app.get('db'), word)
-    word = await LanguageService.getLanguageHead(req.app.get('db'))
+    word = await LanguageService.getLanguageHead(req.app.get('db'), language)
+    console.log(word)
     nextWord = await LanguageService.getNextWord(req.app.get('db'), word)
     await LanguageService.updateNewHead(req.app.get('db'), word)
     let wordToUpdate = await findMSpacesBack(req.app.get('db'), word, word.memory_value)
@@ -113,6 +118,10 @@ languageRouter
         wordCorrectCount: word.correct_count,
         wordIncorrectCount: word.incorrect_count
       })
+    }
+    catch(error) {
+      console.log(error)
+    }
     }
   })
 

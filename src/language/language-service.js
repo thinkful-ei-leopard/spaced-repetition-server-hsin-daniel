@@ -34,6 +34,7 @@ const LanguageService = {
   },
 
   updateNextValue(db, word, nextWord) {
+    console.log('updating')
     return db
       .from('word')
       .where('word.id', word.id)
@@ -60,7 +61,6 @@ const LanguageService = {
   },
 
   updateMemoryOnIncorrectAnswer(db, word) {
-    console.log('updating')
     return db
       .from('word')
       .where('word.id', word.id)
@@ -86,12 +86,13 @@ const LanguageService = {
       .where({ language_id })
   },
 
-  getLanguageHead(db) {
+  getLanguageHead(db, language) {
     return db
-      .from('language')
-      .innerJoin('word', 'word.id', '=', 'language.head')
-      .first()
+      .from('word')
+      .where('word.language_id', language.id)  //specify language id
+      .innerJoin('language', 'language.head', '=', 'word.id')
       .select('*')
+      .first()
   }
 }
 
