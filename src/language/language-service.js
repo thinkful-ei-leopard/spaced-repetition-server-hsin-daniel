@@ -35,6 +35,14 @@ const LanguageService = {
   },
 
   updateNextValue(db, word, nextWord) {
+    if (nextWord.next === null) {
+      return db
+      .from('word')
+      .where('word.id', word.id)
+      .update({
+        next: null
+      })
+    }
     return db
       .from('word')
       .where('word.id', word.id)
