@@ -26,7 +26,7 @@ VALUES
   (3, 1, CONCAT(E'\u62b1', E'\u6b49', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'sorry', 4), --'抱歉'
   (4, 1, CONCAT(E'\u8b1d', E'\u8b1d', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'thank you', 5), --'謝謝'
   (5, 1, CONCAT(E'\u98df', E'\u7269', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'food', 6), --'食物'
-  (6, 1, CONCAT(E'\u6c34', E'\u000d', E'\u000a', E'\u000d', E'\u000aa'), 'water', 7), --'水'
+  (6, 1, CONCAT(E'\u6c34', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'water', 7), --'水'
   (7, 1, CONCAT(E'\u684c', E'\u5b50', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'table', 8), --'桌子'
   (8, 1, CONCAT(E'\u52d5', E'\u7269', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'animal', 9), --'動物'
   (9, 1, CONCAT(E'\u5ec1', E'\u6240', E'\u000d', E'\u000a', E'\u000d', E'\u000a'), 'restroom', 10), --'廁所'
