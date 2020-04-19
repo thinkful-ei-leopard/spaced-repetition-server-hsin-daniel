@@ -1,5 +1,7 @@
 # Spaced repetition API!
 
+CO-Contributors: Daniel Fong, Hsin Ling Hu
+
 ## Local dev setup
 
 If using user `dunder-mifflin`:
